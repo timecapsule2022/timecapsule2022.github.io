@@ -1,1 +1,144 @@
-Hello world!
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echoes of Us: A Digital Memoir of Love</title>
+<!-- Materialize CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Google Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column; /* Align content in column */
+    align-items: center;
+    justify-content: flex-start; /* Start content from the top */
+  }
+  
+  .image-container {
+    width: 100%;
+    height: 80vh; /* Adjust height for images */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .hidden {
+    opacity: 0;
+    z-index: -1;
+  }
+  
+  .visible {
+    opacity: 1;
+    z-index: 1;
+  }
+  
+  .scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .scroll-button-left {
+    left: 10px;
+  }
+  
+  .scroll-button-right {
+    right: 10px;
+  }
+  
+  .page-content {
+    width: 100%;
+    text-align: center;
+    padding: 0px 20px 0px 20px; /* Add padding to the text */
+  }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .page-description {
+    font-size: 14px;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-content">
+    <h1 class="page-title">Echoes of Us: A Digital Memoir of Love</h1>
+    <p class="page-description">This website is dedicated to the happy memories of a beautiful relationship. Moved on but never forgotten.</p>
+  </div>
+  <div class="image-container">
+    <div class="image visible" style="background-image: url('image1.jpg');"></div>
+    <div class="image hidden" style="background-image: url('image2.jpg');"></div>
+    <div class="image hidden" style="background-image: url('image3.jpg');"></div>
+    <div class="image hidden" style="background-image: url('image4.jpg');"></div>
+    <div class="image hidden" style="background-image: url('image5.jpg');"></div>
+    <!-- Add more images if needed -->
+    <button class="scroll-button scroll-button-left" onclick="prevImage()"><i class="material-icons">keyboard_arrow_left</i></button>
+    <button class="scroll-button scroll-button-right" onclick="nextImage()"><i class="material-icons">keyboard_arrow_right</i></button>
+  </div>
+</div>
+
+<!-- Materialize JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  var images = document.querySelectorAll('.image');
+  var currentIndex = 0;
+  
+  function nextImage() {
+    images[currentIndex].classList.remove('visible');
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.remove('hidden');
+    images[currentIndex].classList.add('visible');
+  }
+  
+  function prevImage() {
+    images[currentIndex].classList.remove('visible');
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    images[currentIndex].classList.remove('hidden');
+    images[currentIndex].classList.add('visible');
+  }
+</script>
+</body>
+</html>
