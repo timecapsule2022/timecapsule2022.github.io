@@ -34,6 +34,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    overflow: hidden;
   }
   
   .image {
@@ -44,8 +45,22 @@
     height: 100%;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center;
-    transition: opacity 0.5s ease-in-out;
+    background-position: top;
+    transition: opacity 1s ease-in-out;
+    animation: slideLeft 1s 3 linear;
+    animation-delay: 5s;
+  }
+
+  @keyframes slideLeft {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-100px);
+    }
+    100% {
+      transform: translateX(0px);
+    }
   }
   
   .hidden {
@@ -58,28 +73,40 @@
     z-index: 1;
   }
   
-  .scroll-button {
-    position: absolute;
+  .scroll-guide {
+    position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border: none;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    cursor: pointer;
     z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    opacity: 0;
+    animation: pulse 2s infinite;
   }
-  
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
   .scroll-button-left {
-    left: 10px;
+    left: 0;
   }
   
   .scroll-button-right {
-    right: 10px;
+    right: 0;
   }
   
   .page-content {
@@ -106,15 +133,13 @@
     <h1 class="page-title">Echoes of Us: A Digital Memoir of Love</h1>
     <p class="page-description">This website is dedicated to the happy memories of a beautiful relationship. Moved on but never forgotten.</p>
   </div>
-  <div class="image-container">
+  <div class="image-container" id="imageContainer">
     <div class="image visible" style="background-image: url('image1.jpg');"></div>
     <div class="image hidden" style="background-image: url('image2.jpg');"></div>
     <div class="image hidden" style="background-image: url('image3.jpg');"></div>
     <div class="image hidden" style="background-image: url('image4.jpg');"></div>
     <div class="image hidden" style="background-image: url('image5.jpg');"></div>
     <!-- Add more images if needed -->
-    <button class="scroll-button scroll-button-left" onclick="prevImage()"><i class="material-icons">keyboard_arrow_left</i></button>
-    <button class="scroll-button scroll-button-right" onclick="nextImage()"><i class="material-icons">keyboard_arrow_right</i></button>
   </div>
 </div>
 
@@ -123,13 +148,18 @@
 <script>
   var images = document.querySelectorAll('.image');
   var currentIndex = 0;
-  
+  var scrollLeftGuide = document.getElementById('scrollLeftGuide');
+  var scrollRightGuide = document.getElementById('scrollRightGuide');
+  var imageContainer = document.getElementById('imageContainer');
+  var isScrolled = false;
+
   function nextImage() {
     images[currentIndex].classList.remove('visible');
     images[currentIndex].classList.add('hidden');
     currentIndex = (currentIndex + 1) % images.length;
     images[currentIndex].classList.remove('hidden');
     images[currentIndex].classList.add('visible');
+    isScrolled = true;
   }
   
   function prevImage() {
@@ -138,7 +168,97 @@
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     images[currentIndex].classList.remove('hidden');
     images[currentIndex].classList.add('visible');
+    isScrolled = true;
   }
+
+  document.addEventListener('mousemove', function() {
+    isScrolled = true;
+  });
+
+  document.addEventListener('scroll', function() {
+    isScrolled = true;
+  });
+
+  setInterval(function() {
+    if (!isScrolled) {
+      // Show guides to indicate the option to scroll
+      scrollLeftGuide.style.opacity = '1';
+      scrollRightGuide.style.opacity = '1';
+
+      setTimeout(function() {
+        // Hide guides after 3 seconds
+        scrollLeftGuide.style.opacity = '0';
+        scrollRightGuide.style.opacity = '0';
+      }, 3000);
+    }
+    isScrolled = false;
+  }, 60000); // Check every minute
 </script>
+<script>
+  var images = document.querySelectorAll('.image');
+  var currentIndex = 0;
+  var isScrolled = false;
+
+  function nextImage() {
+    images[currentIndex].classList.remove('visible');
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.remove('hidden');
+    images[currentIndex].classList.add('visible');
+    isScrolled = true;
+  }
+  
+  function prevImage() {
+    images[currentIndex].classList.remove('visible');
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    images[currentIndex].classList.remove('hidden');
+    images[currentIndex].classList.add('visible');
+    isScrolled = true;
+  }
+
+  document.addEventListener('mousemove', function() {
+    isScrolled = true;
+  });
+
+  document.addEventListener('scroll', function() {
+    isScrolled = true;
+  });
+
+  setInterval(function() {
+    if (!isScrolled) {
+      // Show guides to indicate the option to scroll
+      scrollLeftGuide.style.opacity = '1';
+      scrollRightGuide.style.opacity = '1';
+
+      setTimeout(function() {
+        // Hide guides after 3 seconds
+        scrollLeftGuide.style.opacity = '0';
+        scrollRightGuide.style.opacity = '0';
+      }, 3000);
+    }
+    isScrolled = false;
+  }, 60000); // Check every minute
+
+  // Click events for left and right edges of the screen
+  window.addEventListener('click', function(event) {
+    if ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)) {
+      return
+    }
+    if (event.clientX < 250) { // Left edge click
+      prevImage();
+    } else if (window.innerWidth - event.clientX < 250) { // Right edge click
+      nextImage();
+    }
+  });
+  window.addEventListener('touchstart', function(event) {
+    if (event.touches[0].clientX < 100) { // Left edge tap
+        prevImage();
+    } else if (window.innerWidth - event.touches[0].clientX < 100) { // Right edge tap
+        nextImage();
+    }
+});
+</script>
+
 </body>
 </html>
